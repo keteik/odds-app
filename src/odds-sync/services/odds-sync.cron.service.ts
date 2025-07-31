@@ -21,8 +21,7 @@ export class OddsSyncCronService {
   }
 
   // Cron job to sync odds data every 5 minutes
-  // @Cron('0 */5 * * * *')
-  @Cron('*/20 * * * * *')
+  @Cron('0 */5 * * * *')
   async syncOddsData(): Promise<void> {
     console.log(`[${new Date().toISOString()}] Starting odds data sync for sport key: ${this.sportKey}`);
 

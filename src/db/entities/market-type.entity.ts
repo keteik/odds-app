@@ -13,5 +13,5 @@ export class MarketTypeEntity extends BaseEntity {
   key: string;
 
   @OneToMany(() => MarketEntity, (market) => market.marketType)
-  markets: MarketEntity;
+  markets: MarketEntity[];
 }
