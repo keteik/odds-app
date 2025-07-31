@@ -12,7 +12,8 @@ const validationSchema: Joi.ObjectSchema = Joi.object({
   DATABASE_USERNAME: Joi.string().required(),
   DATABASE_PASSWORD: Joi.string().required(),
   DATABASE_NAME: Joi.string().required(),
-  DB_LOGGING: Joi.boolean().default(false),
+  DATABASE_LOGGING: Joi.boolean().default(false),
+  DATABASE_SYNCHRONIZE: Joi.boolean().default(false),
 });
 
 // Configuration for the ConfigModule

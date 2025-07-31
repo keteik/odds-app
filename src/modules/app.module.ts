@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
-import { OddsModule } from './odds/odds.module';
+import { OddsSyncModule } from './odds-sync/odds-sync.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmPostgresConfig } from '../config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { envConfig } from '../config/env.config';
+import { DbModule } from '../db/db.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(envConfig),
     TypeOrmModule.forRootAsync(typeOrmPostgresConfig),
-    OddsModule,
+    DbModule,
+    OddsSyncModule,
   ],
   controllers: [],
   providers: [],
