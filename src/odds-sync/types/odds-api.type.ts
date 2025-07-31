@@ -1,27 +1,27 @@
-interface OddsApiBookmaker {
+interface TheOddsApiBookmaker {
   key: string;
   title: string;
   last_update: string;
-  markets: OddsApiMarket[];
+  markets: TheOddsApiMarket[];
 }
 
-interface OddsApiMarket {
+interface TheOddsApiMarket {
   key: string;
   last_update: string;
-  outcomes: OddsApiOutcome[];
+  outcomes: TheOddsApiOutcome[];
 }
 
-interface OddsApiOutcome {
+interface TheOddsApiOutcome {
   name: string;
   price: number;
 }
 
-export interface OddsApiEvent {
+export interface TheOddsApiEvent {
   id: string;
   sport_key: string;
   sport_title: string;
   commence_time: string;
   home_team: string;
   away_team: string;
-  bookmakers: OddsApiBookmaker[];
+  bookmakers: TheOddsApiBookmaker[];
 }

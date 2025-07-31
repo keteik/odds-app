@@ -14,6 +14,10 @@ const validationSchema: Joi.ObjectSchema = Joi.object({
   DATABASE_NAME: Joi.string().required(),
   DATABASE_LOGGING: Joi.boolean().default(false),
   DATABASE_SYNCHRONIZE: Joi.boolean().default(false),
+  THE_ODDS_API_BASE_URL: Joi.string().uri().required(),
+  THE_ODDS_API_KEY: Joi.string().required(),
+  THE_ODDS_API_SPORT_KEY: Joi.string().required(),
+  THE_ODDS_API_REGIONS: Joi.string().required(),
 });
 
 // Configuration for the ConfigModule

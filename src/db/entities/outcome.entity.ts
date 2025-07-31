@@ -16,8 +16,6 @@ export class OutcomeEntity extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  @ManyToOne(() => MarketEntity, (market) => market.outcomes, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => MarketEntity, (market) => market.outcomes)
   market: MarketEntity;
 }
