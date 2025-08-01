@@ -9,5 +9,6 @@ import { OddsMapperService } from './services/odds-mapper.service';
 @Module({
   imports: [DbModule, HttpModule],
   providers: [OddsSyncService, TheOddsApiService, OddsSyncCronService, OddsMapperService],
+  exports: [OddsSyncService, TheOddsApiService],
 })
 export class OddsSyncModule {}

@@ -18,6 +18,13 @@ const validationSchema: Joi.ObjectSchema = Joi.object({
   THE_ODDS_API_KEY: Joi.string().required(),
   THE_ODDS_API_SPORT_KEY: Joi.string().required(),
   THE_ODDS_API_REGIONS: Joi.string().required(),
+  GOOGLE_SHEETS_CLIENT_ID: Joi.string().required(),
+  GOOGLE_SHEETS_CLIENT_SECRET: Joi.string().required(),
+  GOOGLE_SHEETS_SHEET_URL: Joi.string().uri().required(),
+  GOOGLE_SHEETS_SHEET_ID: Joi.string().required(),
+  GOOGLE_SHEETS_SHEET_NAME: Joi.string().required(),
+  GOOGLE_SHEETS_ACCESS_TOKEN: Joi.string().required(),
+  GOOGLE_SHEETS_REFRESH_TOKEN: Joi.string().required(),
 });
 
 // Configuration for the ConfigModule
