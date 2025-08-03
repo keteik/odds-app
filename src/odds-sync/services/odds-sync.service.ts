@@ -8,6 +8,7 @@ import { MarketEntity } from '../../db/entities/market.entity';
 import { OutcomeEntity } from '../../db/entities/outcome.entity';
 import { TheOddsApiService } from './the-odds-api.service';
 import { ConfigService } from '@nestjs/config';
+import { EnvSchema } from '../../config/env.config';
 
 @Injectable()
 export class OddsSyncService {
@@ -15,7 +16,7 @@ export class OddsSyncService {
     private readonly eventRepositoryService: EventRepositoryService,
     private readonly oddsMapperService: OddsMapperService,
     private readonly theOddsApiService: TheOddsApiService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<EnvSchema>,
   ) {}
 
   get sportKey(): string {

@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { OddsSheetAuthService } from './odds-sheet-auth.service';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { EnvSchema } from '../../config/env.config';
 
 @Injectable()
 export class OddsSheetService {
   constructor(
     private readonly oddsSheetAuthService: OddsSheetAuthService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<EnvSchema>,
   ) {}
 
   get googleSheetUrl(): string {

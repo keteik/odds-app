@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
+import { EnvSchema } from '../../config/env.config';
 
 @Injectable()
 export class OddsSheetAuthService {
   private oauth2Client: OAuth2Client;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(private readonly configService: ConfigService<EnvSchema>) {
     this.oauth2Client = new google.auth.OAuth2({
       clientId: this.clientId,
       clientSecret: this.clientSecret,
@@ -25,10 +26,6 @@ export class OddsSheetAuthService {
 
   get clientSecret(): string {
     return this.configService.get<string>('GOOGLE_SHEETS_CLIENT_SECRET')!;
-  }
-
-  get redirectUri(): string {
-    return this.configService.get<string>('GOOGLE_SHEETS_REDIRECT_URI')!;
   }
 
   getSheet() {
