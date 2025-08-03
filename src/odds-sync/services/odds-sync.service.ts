@@ -9,6 +9,7 @@ import { OutcomeEntity } from '../../db/entities/outcome.entity';
 import { TheOddsApiService } from './the-odds-api.service';
 import { ConfigService } from '@nestjs/config';
 import { EnvSchema } from '../../config/env.config';
+import { OddsSheetService } from '../../odds-sheet/services/odds-sheet.service';
 
 @Injectable()
 export class OddsSyncService {
@@ -17,6 +18,7 @@ export class OddsSyncService {
     private readonly oddsMapperService: OddsMapperService,
     private readonly theOddsApiService: TheOddsApiService,
     private readonly configService: ConfigService<EnvSchema>,
+    private readonly oddsSheetService: OddsSheetService,
   ) {}
 
   get sportKey(): string {
@@ -32,7 +34,7 @@ export class OddsSyncService {
     console.log(`[${new Date().toISOString()}] Starting odds data sync for sport key: ${this.sportKey}`);
 
     const eventsData = await this.theOddsApiService.fetchEvents(this.sportKey, this.regions);
-    console.log(`Fetched ${eventsData.length} events for sport key: ${this.sportKey}`);
+    console.log(`[${new Date().toISOString()}] Fetched ${eventsData.length} events for sport key: ${this.sportKey}`);
 
     // Mapping the odds data to entities
     const [eventEntities, bookmakers, marketTypes, markets, outcomes] =
@@ -40,6 +42,13 @@ export class OddsSyncService {
 
     // Save the mapped entities to the database
     await this.syncWithDb(bookmakers, marketTypes, eventEntities, markets, outcomes);
+    console.log(
+      `[${new Date().toISOString()}] Synced ${eventEntities.length} events, ${bookmakers.length} bookmakers, ${marketTypes.length} market types, ${markets.length} markets, and ${outcomes.length} outcomes for sport key: ${this.sportKey}`,
+    );
+
+    // Sync the odds data with Google Sheets
+    await this.oddsSheetService.syncOddsSheet();
+    console.log(`[${new Date().toISOString()}] Synced odds sheet with Google Sheets`);
 
     console.log(`[${new Date().toISOString()}] Completed odds data sync for sport key: ${this.sportKey}`);
   }

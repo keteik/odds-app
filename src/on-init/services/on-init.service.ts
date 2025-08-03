@@ -6,6 +6,10 @@ export class OnInitService implements OnApplicationBootstrap {
   constructor(private readonly oddsSyncService: OddsSyncService) {}
 
   async onApplicationBootstrap() {
-    await this.oddsSyncService.syncOddsData();
+    try {
+      await this.oddsSyncService.syncOddsData();
+    } catch (error) {
+      console.error('Error during application bootstrap:', error);
+    }
   }
 }

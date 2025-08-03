@@ -6,10 +6,11 @@ import { MarketTypeEntity } from './entities/market-type.entity';
 import { MarketEntity } from './entities/market.entity';
 import { OutcomeEntity } from './entities/outcome.entity';
 import { EventRepositoryService } from './providers/event.repository.service';
+import { MarketRepositoryService } from './providers/market.repository.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EventEntity, BookmakerEntity, MarketTypeEntity, MarketEntity, OutcomeEntity])],
-  providers: [EventRepositoryService],
-  exports: [EventRepositoryService],
+  providers: [EventRepositoryService, MarketRepositoryService],
+  exports: [EventRepositoryService, MarketRepositoryService],
 })
 export class DbModule {}

@@ -3,12 +3,16 @@ import { OddsSheetAuthService } from './odds-sheet-auth.service';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { EnvSchema } from '../../config/env.config';
+import { MarketRepositoryService } from '../../db/providers/market.repository.service';
+import { OddsSheetMapperService } from './odds-sheet-mapper.service';
 
 @Injectable()
 export class OddsSheetService {
   constructor(
     private readonly oddsSheetAuthService: OddsSheetAuthService,
     private readonly configService: ConfigService<EnvSchema>,
+    private readonly marketRepositoryService: MarketRepositoryService,
+    private readonly oddsSheetMapperService: OddsSheetMapperService,
   ) {}
 
   get googleSheetUrl(): string {
@@ -17,6 +21,10 @@ export class OddsSheetService {
 
   get googleSheetId(): string {
     return this.configService.get<string>('GOOGLE_SHEETS_SHEET_ID')!;
+  }
+
+  get sportKey(): string {
+    return this.configService.get<string>('THE_ODDS_API_SPORT_KEY')!;
   }
 
   get googleSheetName(): string {
@@ -36,20 +44,29 @@ export class OddsSheetService {
 
   // Sync Google Sheets with odds data
   async syncOddsSheet(): Promise<void> {
-    const googleSheets = this.oddsSheetAuthService.getSheet();
-    await googleSheets.spreadsheets.values.update({
-      spreadsheetId: this.googleSheetId,
-      range: `${this.googleSheetName}!A1:E10`,
-      valueInputOption: 'RAW',
-      requestBody: {
-        values: [
-          ['Team', 'Odds', 'Date', 'Time', 'Status'],
-          ['Team A', '1.5', '2023-10-01', '15:00', 'Upcoming'],
-          ['Team B', '2.0', '2023-10-01', '15:00', 'Upcoming'],
-          ['Team C', '1.8', '2023-10-01', '15:00', 'Upcoming'],
-          ['Team D', '2.5', '2023-10-01', '15:00', 'Upcoming'],
-        ],
-      },
-    });
+    try {
+      // Find all markets by sport key
+      const markets = await this.marketRepositoryService.findAllBySportKey(this.sportKey);
+
+      // Map the market entities to sheet data
+      const sheetData = this.oddsSheetMapperService.mapEntitiesToSheetData(markets);
+
+      // Sync the sheet data to Google Sheets
+      const googleSheets = this.oddsSheetAuthService.getSheet();
+      await googleSheets.spreadsheets.values.clear({
+        spreadsheetId: this.googleSheetId,
+        range: this.googleSheetName,
+      });
+      await googleSheets.spreadsheets.values.update({
+        spreadsheetId: this.googleSheetId,
+        range: sheetData.range,
+        valueInputOption: 'RAW',
+        requestBody: {
+          values: sheetData.values,
+        },
+      });
+    } catch (error) {
+      console.error('Error syncing odds sheet:', error);
+    }
   }
 }
