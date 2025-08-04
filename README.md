@@ -128,11 +128,6 @@ The application uses a normalized PostgreSQL schema optimized for odds data:
 - **markets** - Specific markets offered by bookmakers for events
 - **outcomes** - Individual betting outcomes with odds
 
-### Key Features:
-- Upsert-friendly design with conflict resolution
-- Built-in views for analysis (arbitrage opportunities, best odds, market margins)
-- Automatic timestamp tracking
-
 ## API Endpoints
 
 - `GET /sheets/odds` - Google Sheets visualization -> [localhost:3000/sheets/odds](http://localhost:3000/sheets/odds).
