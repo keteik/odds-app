@@ -49,7 +49,7 @@ A modern NestJS application for collecting, storing, and analyzing sports bettin
 
 3. **Start with Docker Compose**
    ```bash
-   docker-compose up -d
+   docker-compose up -d --build
    ```
 
 4. **The application will be available at:**
