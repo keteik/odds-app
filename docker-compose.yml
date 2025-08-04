@@ -48,6 +48,7 @@ services:
       GOOGLE_SHEETS_SHEET_NAME: ${GOOGLE_SHEETS_SHEET_NAME}
       GOOGLE_SHEETS_ACCESS_TOKEN: ${GOOGLE_SHEETS_ACCESS_TOKEN}
       GOOGLE_SHEETS_REFRESH_TOKEN: ${GOOGLE_SHEETS_REFRESH_TOKEN}
+    depends_on:
       postgres:
         condition: service_healthy
     restart: unless-stopped
