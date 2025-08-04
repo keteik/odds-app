@@ -52,7 +52,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  postgres_data: 
 
 networks:
   default:
