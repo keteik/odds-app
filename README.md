@@ -1,98 +1,142 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Odds App 🎯
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A modern NestJS application for collecting, storing, and analyzing sports betting odds data. The application fetches odds from The Odds API, stores them in a PostgreSQL database, and provides integration with Google Sheets for data visualization.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**Note**: Currently, the application syncs odds for a single sport at a time, as specified in the `THE_ODDS_API_SPORT_KEY` environment variable.
 
-## Description
+## Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- 🏈 **Sports Odds Collection**: Fetches real-time odds from The Odds API
+- 🗄️ **PostgreSQL Database**: Optimized schema for efficient upserts
+- 📊 **Google Sheets Integration**: Automatically sync odds data to Google Sheets
+- 🔄 **Scheduled Tasks**: Automatic data updates using NestJS scheduler
+- 🐳 **Docker Support**: Full containerization with Docker Compose
+- 📈 **Data Analysis**: Built-in views for arbitrage opportunities and market analysis
+- 🛡️ **TypeORM Integration**: Type-safe database operations
 
-## Project setup
+## Tech Stack
 
-```bash
-$ npm install
+- **Backend**: NestJS, TypeScript
+- **Database**: PostgreSQL 15
+- **ORM**: TypeORM
+- **API**: The Odds API integration
+- **Integration**: Google Sheets API
+- **Containerization**: Docker & Docker Compose
+- **Task Scheduling**: NestJS Schedule module
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+ or Docker
+- PostgreSQL (if running locally)
+- The Odds API key
+- Google Sheets API credentials
+
+### Option 1: Docker (Recommended)
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/keteik/odds-app.git
+   cd odds-app
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys and configuration
+   ```
+
+3. **Start with Docker Compose**
+   ```bash
+   docker-compose up -d
+   ```
+
+4. **The application will be available at:**
+   - API: http://localhost:3000
+   - Database: localhost:5432
+
+### Option 2: Local Development
+
+1. **Clone and install dependencies**
+   ```bash
+   git clone https://github.com/keteik/odds-app.git
+   cd odds-app
+   npm install
+   ```
+
+2. **Set up PostgreSQL database**
+   ```bash
+   # Install PostgreSQL locally or use Docker
+   docker run --name postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:15
+   ```
+
+3. **Configure environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+4. **Start the application**
+   ```bash
+   # Development mode
+   npm run start:dev
+   
+   # Production mode
+   npm run build
+   npm run start:prod
+   ```
+
+## Environment Configuration
+
+Create a `.env` file with the following variables:
+
+```env
+# Application
+APP_PORT=3000
+
+# Database
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=odds_user
+DATABASE_PASSWORD=odds_password
+DATABASE_NAME=odds_data
+
+# The Odds API
+THE_ODDS_API_BASE_URL=https://api.the-odds-api.com/v4/
+THE_ODDS_API_KEY=your_api_key_here
+THE_ODDS_API_SPORT_KEY=americanfootball_nfl  # Single sport - change to desired sport
+THE_ODDS_API_REGIONS=eu   # Regions can be 'us', 'us2, 'uk', 'au', 'eu'. Comma separated for multiple regions, e.g., 'us,uk,eu'
+
+# Google Sheets Integration
+GOOGLE_SHEETS_CLIENT_ID=your_client_id
+GOOGLE_SHEETS_CLIENT_SECRET=your_client_secret
+GOOGLE_SHEETS_SHEET_URL=https://docs.google.com/spreadsheets/d/
+GOOGLE_SHEETS_SHEET_ID=your_sheet_id   # sheet must be public or shared with the service account
+GOOGLE_SHEETS_SHEET_NAME=Odds   # Name of the sheet where odds will be stored
+GOOGLE_SHEETS_ACCESS_TOKEN=your_access_token
+GOOGLE_SHEETS_REFRESH_TOKEN=your_refresh_token
 ```
 
-## Compile and run the project
+## Database Schema
 
-```bash
-# development
-$ npm run start
+The application uses a normalized PostgreSQL schema optimized for odds data:
 
-# watch mode
-$ npm run start:dev
+- **events** - Sports matches/events
+- **bookmakers** - Betting companies  
+- **market_types** - Types of betting markets (h2h, h2h_lay, etc.)
+- **markets** - Specific markets offered by bookmakers for events
+- **outcomes** - Individual betting outcomes with odds
 
-# production mode
-$ npm run start:prod
-```
+### Key Features:
+- Upsert-friendly design with conflict resolution
+- Built-in views for analysis (arbitrage opportunities, best odds, market margins)
+- Automatic timestamp tracking
 
-## Run tests
+## API Endpoints
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- `GET /sheets/odds` - Google Sheets visualization -> [localhost:3000/sheets/odds](http://localhost:3000/sheets/odds).
 
 ## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+For support, please open an issue on GitHub or contact [ki3t3@gmail.com](mailto:ki3t3@gmail.com).

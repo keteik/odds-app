@@ -2,7 +2,7 @@ import { Controller, Get, Req } from '@nestjs/common';
 import { OddsSheetService } from '../services/odds-sheet.service';
 import express from 'express';
 
-@Controller('api/sheets')
+@Controller('sheets')
 export class OddsSheetController {
   constructor(private readonly oddsSheetService: OddsSheetService) {}
 
