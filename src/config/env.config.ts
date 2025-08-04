@@ -5,7 +5,7 @@ import Joi from 'joi';
 // This schema defines the expected structure of environment variables
 // and will be used to validate the loaded configuration.
 export type EnvSchema = {
-  PORT: number;
+  APP_PORT: number;
   DATABASE_HOST: string;
   DATABASE_PORT: number;
   DATABASE_USERNAME: string;
@@ -31,7 +31,7 @@ export type EnvSchema = {
 // This schema will validate the environment variables loaded from the .env file
 // and ensure they meet the expected types and constraints.
 const envValidationSchema: Joi.ObjectSchema<EnvSchema> = Joi.object<EnvSchema>({
-  PORT: Joi.number().default(3000),
+  APP_PORT: Joi.number().default(3000),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().default(5432),
   DATABASE_USERNAME: Joi.string().required(),
@@ -55,7 +55,7 @@ const envValidationSchema: Joi.ObjectSchema<EnvSchema> = Joi.object<EnvSchema>({
 // Configuration for the ConfigModule
 // This configuration will load environment variables from the specified .env file
 export const envConfig: ConfigModuleOptions = {
-  envFilePath: 'env/.env',
+  envFilePath: '.env',
   validationSchema: envValidationSchema,
   isGlobal: true,
 };

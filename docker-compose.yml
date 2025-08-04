@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: odds-postgres
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:${DATABASE_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odds_user -d odds_data"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: odds-app
+    container_name: odds-backend
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      PORT: ${APP_PORT}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_LOGGING: ${DATABASE_LOGGING}
+      DATABASE_SYNCHRONIZE: ${DATABASE_SYNCHRONIZE}
+      THE_ODDS_API_BASE_URL: ${THE_ODDS_API_BASE_URL}
+      THE_ODDS_API_KEY: ${THE_ODDS_API_KEY}
+      THE_ODDS_API_SPORT_KEY: ${THE_ODDS_API_SPORT_KEY}
+      THE_ODDS_API_REGIONS: ${THE_ODDS_API_REGIONS}
+      GOOGLE_SHEETS_CLIENT_ID: ${GOOGLE_SHEETS_CLIENT_ID}
+      GOOGLE_SHEETS_CLIENT_SECRET: ${GOOGLE_SHEETS_CLIENT_SECRET}
+      GOOGLE_SHEETS_SHEET_URL: ${GOOGLE_SHEETS_SHEET_URL}
+      GOOGLE_SHEETS_SHEET_ID: ${GOOGLE_SHEETS_SHEET_ID}
+      GOOGLE_SHEETS_SHEET_NAME: ${GOOGLE_SHEETS_SHEET_NAME}
+      GOOGLE_SHEETS_ACCESS_TOKEN: ${GOOGLE_SHEETS_ACCESS_TOKEN}
+      GOOGLE_SHEETS_REFRESH_TOKEN: ${GOOGLE_SHEETS_REFRESH_TOKEN}
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  default:
+    name: odds-network
