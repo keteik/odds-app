@@ -49,7 +49,7 @@ A modern NestJS application for collecting, storing, and analyzing sports bettin
 
 3. **Start with Docker Compose**
    ```bash
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
 
 4. **The application will be available at:**
@@ -139,4 +139,4 @@ The application uses a normalized PostgreSQL schema optimized for odds data:
 
 ## Support
 
-For support, please open an issue on GitHub or contact [ki3t3@gmail.com](mailto:ki3t3@gmail.com).
+For support, please open an issue on GitHub or contact [ki3t3k@gmail.com](mailto:ki3t3k@gmail.com).
