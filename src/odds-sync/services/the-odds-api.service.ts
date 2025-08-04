@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { catchError, firstValueFrom } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { Injectable } from '@nestjs/common';
+import { EnvSchema } from '../../config/env.config';
 
 @Injectable()
 export class TheOddsApiService {
@@ -12,7 +13,7 @@ export class TheOddsApiService {
 
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<EnvSchema>,
   ) {}
 
   get baseUrl(): string {

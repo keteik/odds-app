@@ -5,9 +5,11 @@ import { HttpModule } from '@nestjs/axios';
 import { TheOddsApiService } from './services/the-odds-api.service';
 import { OddsSyncCronService } from './services/odds-sync.cron.service';
 import { OddsMapperService } from './services/odds-mapper.service';
+import { OddsSheetModule } from '../odds-sheet/odds-sheet.module';
 
 @Module({
-  imports: [DbModule, HttpModule],
+  imports: [DbModule, HttpModule, OddsSheetModule],
   providers: [OddsSyncService, TheOddsApiService, OddsSyncCronService, OddsMapperService],
+  exports: [OddsSyncService, TheOddsApiService],
 })
 export class OddsSyncModule {}

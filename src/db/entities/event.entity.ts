@@ -1,7 +1,9 @@
-import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, Index, OneToMany } from 'typeorm';
 import { BaseEntity } from './base-entity';
 import { MarketEntity } from './market.entity';
 
+@Index('event_sportKey_index', ['sportKey'])
+@Index('event_not_deleted_index', ['deletedAt'], { where: '"deleted_at" IS NULL' })
 @Entity({ name: 'events' })
 export class EventEntity extends BaseEntity {
   constructor(data: {
