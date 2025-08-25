@@ -10,25 +10,25 @@ import { OddsSheetMapperService } from './odds-sheet-mapper.service';
 export class OddsSheetService {
   constructor(
     private readonly oddsSheetAuthService: OddsSheetAuthService,
-    private readonly configService: ConfigService<EnvSchema>,
+    private readonly configService: ConfigService<EnvSchema, true>,
     private readonly marketRepositoryService: MarketRepositoryService,
     private readonly oddsSheetMapperService: OddsSheetMapperService,
   ) {}
 
-  get googleSheetUrl(): string {
-    return this.configService.get<string>('GOOGLE_SHEETS_SHEET_URL')!;
+  get googleSheetUrl() {
+    return this.configService.get('GOOGLE_SHEETS_SHEET_URL', { infer: true });
   }
 
-  get googleSheetId(): string {
-    return this.configService.get<string>('GOOGLE_SHEETS_SHEET_ID')!;
+  get googleSheetId() {
+    return this.configService.get('GOOGLE_SHEETS_SHEET_ID', { infer: true });
   }
 
-  get sportKey(): string {
-    return this.configService.get<string>('THE_ODDS_API_SPORT_KEY')!;
+  get sportKey() {
+    return this.configService.get('THE_ODDS_API_SPORT_KEY', { infer: true });
   }
 
-  get googleSheetName(): string {
-    return this.configService.get<string>('GOOGLE_SHEETS_SHEET_NAME')!;
+  get googleSheetName() {
+    return this.configService.get('GOOGLE_SHEETS_SHEET_NAME', { infer: true });
   }
 
   // Redirects to the Google Sheets URL with the specified sheet ID

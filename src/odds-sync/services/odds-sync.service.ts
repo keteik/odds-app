@@ -17,16 +17,16 @@ export class OddsSyncService {
     private readonly eventRepositoryService: EventRepositoryService,
     private readonly oddsMapperService: OddsMapperService,
     private readonly theOddsApiService: TheOddsApiService,
-    private readonly configService: ConfigService<EnvSchema>,
+    private readonly configService: ConfigService<EnvSchema, true>,
     private readonly oddsSheetService: OddsSheetService,
   ) {}
 
-  get sportKey(): string {
-    return this.configService.get<string>('THE_ODDS_API_SPORT_KEY')!;
+  get sportKey() {
+    return this.configService.get('THE_ODDS_API_SPORT_KEY', { infer: true });
   }
 
-  get regions(): string[] {
-    return this.configService.get<string>('THE_ODDS_API_REGIONS')!.split(',');
+  get regions() {
+    return this.configService.get('THE_ODDS_API_REGIONS', { infer: true }).split(',');
   }
 
   // Processes the odds data from the API and syncs it with the database

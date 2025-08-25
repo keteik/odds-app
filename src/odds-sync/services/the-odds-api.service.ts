@@ -13,15 +13,15 @@ export class TheOddsApiService {
 
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService<EnvSchema>,
+    private readonly configService: ConfigService<EnvSchema, true>,
   ) {}
 
-  get baseUrl(): string {
-    return this.configService.get<string>('THE_ODDS_API_BASE_URL')!;
+  get baseUrl() {
+    return this.configService.get('THE_ODDS_API_BASE_URL', { infer: true });
   }
 
-  get apiKey(): string {
-    return this.configService.get<string>('THE_ODDS_API_KEY')!;
+  get apiKey() {
+    return this.configService.get('THE_ODDS_API_KEY', { infer: true });
   }
 
   async fetchEvents(sportKey: string, regions: string[]): Promise<TheOddsApiEvent[]> {

@@ -6,10 +6,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class OddsSheetMapperService {
-  constructor(private readonly configService: ConfigService<EnvSchema>) {}
+  constructor(private readonly configService: ConfigService<EnvSchema, true>) {}
 
-  get googleSheetName(): string {
-    return this.configService.get<string>('GOOGLE_SHEETS_SHEET_NAME')!;
+  get googleSheetName() {
+    return this.configService.get('GOOGLE_SHEETS_SHEET_NAME', { infer: true });
   }
 
   mapEntitiesToSheetData(marketEntities: MarketEntity[]) {

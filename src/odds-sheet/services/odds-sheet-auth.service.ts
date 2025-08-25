@@ -8,24 +8,24 @@ import { EnvSchema } from '../../config/env.config';
 export class OddsSheetAuthService {
   private oauth2Client: OAuth2Client;
 
-  constructor(private readonly configService: ConfigService<EnvSchema>) {
+  constructor(private readonly configService: ConfigService<EnvSchema, true>) {
     this.oauth2Client = new google.auth.OAuth2({
       clientId: this.clientId,
       clientSecret: this.clientSecret,
     });
 
     this.oauth2Client.setCredentials({
-      access_token: this.configService.get<string>('GOOGLE_SHEETS_ACCESS_TOKEN'),
-      refresh_token: this.configService.get<string>('GOOGLE_SHEETS_REFRESH_TOKEN'),
+      access_token: this.configService.get('GOOGLE_SHEETS_ACCESS_TOKEN'),
+      refresh_token: this.configService.get('GOOGLE_SHEETS_REFRESH_TOKEN'),
     });
   }
 
-  get clientId(): string {
-    return this.configService.get<string>('GOOGLE_SHEETS_CLIENT_ID')!;
+  get clientId() {
+    return this.configService.get('GOOGLE_SHEETS_CLIENT_ID', { infer: true });
   }
 
-  get clientSecret(): string {
-    return this.configService.get<string>('GOOGLE_SHEETS_CLIENT_SECRET')!;
+  get clientSecret() {
+    return this.configService.get('GOOGLE_SHEETS_CLIENT_SECRET', { infer: true });
   }
 
   getSheet() {
