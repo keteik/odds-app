@@ -8,6 +8,7 @@ import { DbModule } from './db/db.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { OddsSheetModule } from './odds-sheet/odds-sheet.module';
 import { OnInitModule } from './on-init/on-init.module';
+import { LogModule } from './log/log.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { OnInitModule } from './on-init/on-init.module';
     OddsSyncModule,
     OddsSheetModule,
     OnInitModule,
+    LogModule,
   ],
   controllers: [],
   providers: [],

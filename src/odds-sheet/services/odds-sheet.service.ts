@@ -5,6 +5,7 @@ import { Request } from 'express';
 import { EnvSchema } from '../../config/env.config';
 import { MarketRepositoryService } from '../../db/providers/market.repository.service';
 import { OddsSheetMapperService } from './odds-sheet-mapper.service';
+import { ConsoleLogService } from 'src/log/services/console-log.service';
 
 @Injectable()
 export class OddsSheetService {
@@ -13,6 +14,7 @@ export class OddsSheetService {
     private readonly configService: ConfigService<EnvSchema, true>,
     private readonly marketRepositoryService: MarketRepositoryService,
     private readonly oddsSheetMapperService: OddsSheetMapperService,
+    private readonly consoleLogService: ConsoleLogService,
   ) {}
 
   get googleSheetUrl() {
@@ -38,7 +40,7 @@ export class OddsSheetService {
 
       return req.res?.redirect(redirectUrl);
     } catch (error) {
-      console.error('Error reading sheet:', error);
+      this.consoleLogService.error('Error reading sheet:', error);
     }
   }
 
@@ -66,7 +68,7 @@ export class OddsSheetService {
         },
       });
     } catch (error) {
-      console.error('Error syncing odds sheet:', error);
+      this.consoleLogService.error('Error syncing odds sheet:', error);
     }
   }
 }
