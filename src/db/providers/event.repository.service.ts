@@ -6,6 +6,7 @@ import { BookmakerEntity } from '../entities/bookmaker.entity';
 import { MarketTypeEntity } from '../entities/market-type.entity';
 import { MarketEntity } from '../entities/market.entity';
 import { OutcomeEntity } from '../entities/outcome.entity';
+import { QueryRunner } from 'typeorm/browser';
 
 export class EventRepositoryService {
   constructor(
@@ -15,14 +16,23 @@ export class EventRepositoryService {
   ) {}
 
   // Generic method to create an upsert query builder for any entity type
-  private upsertQueryBuilder<T>(entity: new (data: T) => T, data: UpsertData<T>) {
-    return this.dataSource
-      .getRepository(entity)
-      .createQueryBuilder()
-      .insert()
-      .values(data.entities)
-      .orUpdate(data.overwrite, data.conflictTarget)
-      .returning(data.returning);
+  private async upsert<T>(
+    queryRunner: QueryRunner,
+    entity: new (data: T) => T,
+    data: UpsertData<T>,
+    batchSize: number = 1000,
+  ) {
+    for (let i = 0; i < data.entities.length; i += batchSize) {
+      const batch = data.entities.slice(i, i + batchSize);
+      await queryRunner.manager
+        .getRepository(entity)
+        .createQueryBuilder()
+        .insert()
+        .values(batch)
+        .orUpdate(data.overwrite, data.conflictTarget)
+        .returning(data.returning)
+        .execute();
+    }
   }
 
   /**
@@ -50,14 +60,11 @@ export class EventRepositoryService {
 
     try {
       // Upsert bookmakers, market types, events, markets, and outcomes
-      await Promise.all([
-        this.upsertQueryBuilder(BookmakerEntity, bookmakers).execute(),
-        this.upsertQueryBuilder(MarketTypeEntity, marketTypes).execute(),
-        this.upsertQueryBuilder(EventEntity, events).execute(),
-      ]);
-
-      await this.upsertQueryBuilder(MarketEntity, markets).execute();
-      await this.upsertQueryBuilder(OutcomeEntity, outcomes).execute();
+      await this.upsert(queryRunner, BookmakerEntity, bookmakers);
+      await this.upsert(queryRunner, MarketTypeEntity, marketTypes);
+      await this.upsert(queryRunner, EventEntity, events);
+      await this.upsert(queryRunner, MarketEntity, markets);
+      await this.upsert(queryRunner, OutcomeEntity, outcomes);
 
       // Soft delete events that are no longer present for the same sport
       // This ensures that we only keep the events that are currently active.
