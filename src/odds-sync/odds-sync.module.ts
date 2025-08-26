@@ -6,9 +6,10 @@ import { TheOddsApiService } from './services/the-odds-api.service';
 import { OddsSyncCronService } from './services/odds-sync.cron.service';
 import { OddsMapperService } from './services/odds-mapper.service';
 import { OddsSheetModule } from '../odds-sheet/odds-sheet.module';
+import { LogModule } from 'src/log/log.module';
 
 @Module({
-  imports: [DbModule, HttpModule, OddsSheetModule],
+  imports: [DbModule, HttpModule, OddsSheetModule, LogModule],
   providers: [OddsSyncService, TheOddsApiService, OddsSyncCronService, OddsMapperService],
   exports: [OddsSyncService, TheOddsApiService],
 })
